@@ -2,7 +2,7 @@ schema_version: 1
 
 context:
   name: dfxm-geo
-  version: "2.2.0"
+  version: "2.3.1"
   python_min: "3.11"
 
 package:
@@ -11,7 +11,7 @@ package:
 
 source:
   url: https://pypi.org/packages/source/${{ name[0] }}/${{ name }}/dfxm_geo-${{ version }}.tar.gz
-  sha256: 99c9d24d6e0aa9bdf513bc159b5c252f1d8767abd21e334dc90e4b6976949952
+  sha256: 85b20c6df7792f4e6ef976cea2ea99cf17c425ff5054b9f5903f32f1a4429900
 
 build:
   number: 0
