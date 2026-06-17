@@ -18,10 +18,13 @@ build:
   noarch: python
   script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
   python:
+    # All SEVEN console scripts must be declared so rattler-build generates
+    # working OS launchers (a missing one yields a broken Windows .exe).
     entry_points:
       - dfxm-forward = dfxm_geo.pipeline:cli_main
       - dfxm-identify = dfxm_geo.pipeline:cli_main_identify
       - dfxm-bootstrap = dfxm_geo.reciprocal_space.kernel:cli_main
+      - dfxm-find-reflections = dfxm_geo.find_reflections_cmd:cli_main
       - dfxm-init = dfxm_geo.init_cmd:cli_main
       - dfxm-migrate-output = dfxm_geo.io.migrate:cli_main_npy_to_h5
       - dfxm-migrate-h5 = dfxm_geo.io.migrate:cli_main_h5_to_h5
@@ -45,6 +48,8 @@ requirements:
     - tqdm >=4.66.3
   run_constraints:
     # Optional extras — not installed by default, but version-pinned if present.
+    # Kept out of `run` so the package stays noarch (gemmi is a compiled dep).
+    - gemmi >=0.7        # cif (CIF crystal-structure input)
     - xraylib >=4.1      # beamstop-wire (X-ray attenuation through the wire)
     - psutil >=5         # memory-aware (adaptive parallel worker capping)
     - plotly >=5         # identification (interactive viewers)
@@ -68,6 +73,7 @@ tests:
       - dfxm-forward --help
       - dfxm-identify --help
       - dfxm-bootstrap --help
+      - dfxm-find-reflections --help
       - dfxm-init --help
     requirements:
       run:
@@ -83,12 +89,13 @@ about:
   description: |
     dfxm-geo is a geometrical-optics forward model for dark-field X-ray
     microscopy (DFXM). It simulates DFXM images of crystals containing
-    dislocations, supports multi-reflection kernels, scan trajectories
-    (theta / two_dtheta / z), and crystal layouts, and writes simulation
-    output in a BLISS-compatible HDF5 layout. A companion identification
-    mode reconstructs dislocation populations from simulated scans.
+    dislocations across FCC, BCC, and HCP structures (or any cell via a CIF
+    file), with multi-reflection runs, symmetric and oblique geometry, scan
+    trajectories, and a measured uint16-ADU detector model, and writes
+    simulation output in a BLISS-compatible HDF5 layout. A companion
+    identification mode reconstructs dislocation populations from scans.
 
-    The model is described in Borgi et al., IUCrJ (2024).
+    The model is described in Borgi et al., J. Appl. Cryst. 57, 358 (2024).
 
 extra:
   recipe-maintainers:
